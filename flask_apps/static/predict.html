@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>skin assesment app</title>
+    <style>
+
+        body{
+            background-color: lightblue;
+            font-size: 30px;
+            font-family: sans-serif;
+        }
+        h5{
+            font-size: 60px;
+            text-align: center;
+            color: green;
+            text-transform: capitalize;
+        }
+        p{
+            font-weight:bold;
+            color: green;
+            text-transform: capitalize;
+            font-family: sans-serif    
+        }
+    </style>
+    </head>
+<body>
+    <h5> SKIN ASSESMENT ANALYSIS </h5>
+    <br>
+    <input id ="image-selector" type="file">
+    <button id="predict-button" >Predict</button>
+    <p>Prediction</p>
+    <p>The skin assesment will be within 7 Classes</p>
+    <ul>
+        <li>actinic keratosis /Bowens disease (intraepithelial carcinoma) (AKIEC)</li>
+        <li>basal cell carcinoma (BCC)</li>
+        <li>benign keratosis (BKL)</li>
+        <li>dermatofibroma (DF)</li>
+        <li>melanoma (MEL)</li>
+        <li>melanocytic nevus (NV)</li>
+        <li>vascular lesion (VASC)</li>
+    </ul>
+    <br><br>
+    <h2 style=" color: red">If probablity 1 the you have high chances to have the disease</h2>
+    
+    <img id="selected-image" src=""/>
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        let base64Image;
+        $("#image-selector").change(function(){
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let dataURL = reader.result;
+                $('#selected-image').attr("src", dataURL);
+                base64Image = dataURL.replace("data:image/jpg;base64,","");
+            
+            }
+            reader.readAsDataURL($("#image-selector")[0].files[0]);
+            
+        });
+        
+        $("#predict-button").click(function(event){
+            let message = {
+                image : base64Image
+            }
+            console.log(message);
+                    $.post("http://127.0.0.1:5000/predict", JSON.stringify(message), function(response){
+                                   console.log(response);
+				   document.write(response);				
+                    });
+         });
+    </script>
+    </body>
+</html>
